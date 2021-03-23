@@ -174,7 +174,7 @@ static int sef_cb_init_fresh(int UNUSED(type), sef_init_info_t *UNUSED(info))
       return(ENOMEM);
   }
   m_vaddrs[MY_DISK_DEV] = (vir_bytes) mem;
-  m_geom[MEM_DEV].dv_size = ramdev_size;
+  m_geom[MY_DISK_DEV].dv_size = ramdev_size;
 
   return(OK);
 }
