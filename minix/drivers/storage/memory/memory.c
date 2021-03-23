@@ -1,13 +1,13 @@
 /* This file contains the device dependent part of the drivers for the
  * following special files:
- *     /dev/ram		- RAM disk 
- *     /dev/mem		- absolute memory
- *     /dev/kmem	- kernel virtual memory
- *     /dev/null	- null device (data sink)
- *     /dev/boot	- boot device loaded from boot image 
- *     /dev/zero	- null byte stream generator
- *     /dev/imgrd	- boot image RAM disk
- *
+ *     /dev/ram		 - RAM disk 
+ *     /dev/mem		 - absolute memory
+ *     /dev/kmem	 - kernel virtual memory
+ *     /dev/null	 - null device (data sink)
+ *     /dev/boot	 - boot device loaded from boot image 
+ *     /dev/zero	 - null byte stream generator
+ *     /dev/imgrd	 - boot image RAM disk
+ *     /dev/mydisk - mydisk device 
  *  Changes:
  *	Apr 29, 2005	added null byte generator  (Jorrit N. Herder)
  *	Apr 09, 2005	added support for boot device  (Jorrit N. Herder)
@@ -155,13 +155,26 @@ static int sef_cb_init_fresh(int UNUSED(type), sef_init_info_t *UNUSED(info))
   m_vaddrs[IMGRD_DEV] = (vir_bytes) imgrd;
 
   for(i = 0; i < NR_DEVS; i++)
-	openct[i] = 0;
+	 openct[i] = 0;
 
   /* Set up memory range for /dev/mem. */
   m_geom[MEM_DEV].dv_base = 0;
   m_geom[MEM_DEV].dv_size = 0xffffffffULL;
 
   m_vaddrs[MEM_DEV] = (vir_bytes) MAP_FAILED; /* we are not mapping this in. */
+
+  
+  /* Try to allocate memory for mydisk */
+  void *mem;
+  u32_t ramdev_size = 4 * 1024 * 1024;
+  mem = NULL;
+
+  if(ramdev_size > 0 && (mem = mmap(NULL, ramdev_size, PROT_READ|PROT_WRITE, MAP_PREALLOC|MAP_ANON, -1, 0)) == MAP_FAILED) {
+      printf("MEM: failed to get memory for mydisk\n");
+      return(ENOMEM);
+  }
+  m_vaddrs[MY_DISK_DEV] = (vir_bytes) mem;
+  m_geom[MEM_DEV].dv_size = ramdev_size;
 
   return(OK);
 }
@@ -541,42 +554,40 @@ static int m_block_ioctl(devminor_t minor, unsigned long request,
   }
 
   /* Get request structure */
-  s= sys_safecopyfrom(endpt, grant, 0, (vir_bytes)&ramdev_size,
-	sizeof(ramdev_size));
+  s= sys_safecopyfrom(endpt, grant, 0, (vir_bytes)&ramdev_size, sizeof(ramdev_size));
   if (s != OK)
-	return s;
+	 return s;
   if(is_imgrd)
   	ramdev_size = 0;
   if(m_vaddrs[minor] && dv->dv_size == (u64_t) ramdev_size) {
-	return(OK);
+	 return(OK);
   }
   /* openct is 1 for the ioctl(). */
   if(openct[minor] != 1) {
-	printf("MEM: MIOCRAMSIZE: %d in use (count %d)\n",
-		minor, openct[minor]);
-	return(EBUSY);
+  	printf("MEM: MIOCRAMSIZE: %d in use (count %d)\n", minor, openct[minor]);
+  	return(EBUSY);
   }
   if(m_vaddrs[minor]) {
-	u32_t a, o;
-	u64_t size;
-	int r;
-	if(ex64hi(dv->dv_size)) {
-		panic("huge old ramdisk");
-	}
-	size = dv->dv_size;
-	a = m_vaddrs[minor];
-	if((o = a % PAGE_SIZE)) {
-		vir_bytes l = PAGE_SIZE - o;
-		a += l;
-		size -= l;
-	}
-	size = rounddown(size, PAGE_SIZE);
-	r = munmap((void *) a, size);
-	if(r != OK) {
-		printf("memory: WARNING: munmap failed: %d\n", r);
-	}
-	m_vaddrs[minor] = (vir_bytes) NULL;
-	dv->dv_size = 0;
+  	u32_t a, o;
+  	u64_t size;
+  	int r;
+  	if(ex64hi(dv->dv_size)) {
+  		panic("huge old ramdisk");
+  	}
+  	size = dv->dv_size;
+  	a = m_vaddrs[minor];
+  	if((o = a % PAGE_SIZE)) {
+  		vir_bytes l = PAGE_SIZE - o;
+  		a += l;
+  		size -= l;
+  	}
+  	size = rounddown(size, PAGE_SIZE);
+  	r = munmap((void *) a, size);
+  	if(r != OK) {
+  		printf("memory: WARNING: munmap failed: %d\n", r);
+  	}
+  	m_vaddrs[minor] = (vir_bytes) NULL;
+  	dv->dv_size = 0;
   }
 
 #if DEBUG
