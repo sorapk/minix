@@ -363,7 +363,7 @@ do
 			minor=`expr ${minor} + 4`
 		done
 		;;
-	ram|mem|kmem|null|boot|zero|imgrd)
+	ram|mem|kmem|null|boot|zero|imgrd|mydisk)
 		# Memory devices.
 		makedev ram   b 1 0 ${uname} kmem ${permissions}
 		makedev mem   c 1 1 ${uname} kmem 640
