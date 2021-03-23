@@ -316,7 +316,7 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
     	break;
     case HEX_DEV:
       char hexArr[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
-      char c = hexChar[position % (sizeof(hexArr)/sizeof(hexArr[0])) ]
+      char c = hexArr[position % (sizeof(hexArr)/sizeof(hexArr[0])) ];
       if ((r = sys_safememset(endpt, grant, 0, c, size)) == OK)
         r = size;
       break;
