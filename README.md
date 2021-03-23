@@ -23,11 +23,10 @@ Compiling Commands Within MINIX 3.3.0:
 Mydisk Testing Commands:
 1. mkdir /mnt/mydisk
 2. chmod 755 /mnt/mydisk
-3. mount /dev/mydisk /mnt/mydisk
-4. mkfs.mfs /dev/mydisk
-5. mount /dev/mydisk /mnt/mydisk
-6. cd /mnt/mydisk
-7. seq -s '' 500000 > data
-8. vi data
-9. df
-10. ls -l
+3. mkfs.mfs /dev/mydisk
+4. mount /dev/mydisk /mnt/mydisk
+5. cd /mnt/mydisk
+6. seq -s '' 500000 > data
+7. vi data
+8. df
+9. ls -l
