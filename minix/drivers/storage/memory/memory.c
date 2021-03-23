@@ -8,6 +8,7 @@
  *     /dev/zero	 - null byte stream generator
  *     /dev/imgrd	 - boot image RAM disk
  *     /dev/mydisk - mydisk device 
+ *     /dev/hex    - hex device
  *  Changes:
  *	Apr 29, 2005	added null byte generator  (Jorrit N. Herder)
  *	Apr 09, 2005	added support for boot device  (Jorrit N. Herder)
@@ -310,27 +311,29 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
   if (minor < 0 || minor >= NR_DEVS || m_is_block(minor)) return ENXIO;
 
   switch (minor) {
-  case NULL_DEV:
-	r = 0;	/* always at EOF */
-	break;
-
-  case ZERO_DEV:
-	/* Fill the target area with zeroes. In fact, let the kernel do it! */
-	if ((r = sys_safememset(endpt, grant, 0, '\0', size)) == OK)
-		r = size;
-	break;
-
-  case KMEM_DEV:
-	r = m_transfer_kmem(minor, FALSE, position, endpt, grant, size);
-	break;
-
-  case MEM_DEV:
-	r = m_transfer_mem(minor, FALSE, position, endpt, grant, size);
-	break;
-
-  default:
-	panic("unknown character device %d", minor);
-  }
+    case NULL_DEV:
+    	r = 0;	/* always at EOF */
+    	break;
+    case HEX_DEV:
+      char hexArr[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
+      char c = hexChar[position % (sizeof(hexArr)/sizeof(hexArr[0])) ]
+      if ((r = sys_safememset(endpt, grant, 0, c, size)) == OK)
+        r = size;
+      break;
+    case ZERO_DEV:
+    	/* Fill the target area with zeroes. In fact, let the kernel do it! */
+    	if ((r = sys_safememset(endpt, grant, 0, '\0', size)) == OK)
+    		r = size;
+  	break;
+    case KMEM_DEV:
+    	r = m_transfer_kmem(minor, FALSE, position, endpt, grant, size);
+    	break;
+    case MEM_DEV:
+    	r = m_transfer_mem(minor, FALSE, position, endpt, grant, size);
+    	break;
+    default:
+    	panic("unknown character device %d", minor);
+    }
 
   return r;
 }
