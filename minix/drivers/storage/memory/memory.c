@@ -192,6 +192,7 @@ static int m_is_block(devminor_t minor)
   case KMEM_DEV:
   case NULL_DEV:
   case ZERO_DEV:
+  case HEX_DEV:
 	return FALSE;
 
   default:
@@ -354,6 +355,7 @@ static ssize_t m_char_write(devminor_t minor, u64_t position, endpoint_t endpt,
   switch (minor) {
   case NULL_DEV:
   case ZERO_DEV:
+  case HEX_DEV:
 	r = size;	/* just eat everything */
 	break;
 
