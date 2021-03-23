@@ -168,7 +168,7 @@ static int sef_cb_init_fresh(int UNUSED(type), sef_init_info_t *UNUSED(info))
   void *mem;
   u32_t ramdev_size = 4 * 1024 * 1024;
   mem = NULL;
-
+  printf("=== initing mydisk === \n");
   if(ramdev_size > 0 && (mem = mmap(NULL, ramdev_size, PROT_READ|PROT_WRITE, MAP_PREALLOC|MAP_ANON, -1, 0)) == MAP_FAILED) {
       printf("MEM: failed to get memory for mydisk\n");
       return(ENOMEM);
