@@ -372,10 +372,11 @@ do
 		makedev boot  b 1 4 ${uname} kmem ${permissions}
 		makedev zero  c 1 5 ${uname} kmem 644
 		makedev imgrd b 1 6 ${uname} kmem ${permissions}
-
+		makedev mydisk b 1 7 ${uname} kmem ${permissions}
+		
 		for n in 0 1 2 3 4 5
 		do
-			minor=`expr ${n} + 7`
+			minor=`expr ${n} + 8`
 
 			makedev ram${n} b 1 ${minor} ${uname} kmem ${permissions}
 		done
