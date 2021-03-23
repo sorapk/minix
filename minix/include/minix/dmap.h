@@ -78,8 +78,8 @@
 #  define NULL_DEV    		   3	/* minor device for /dev/null */
 #  define BOOT_DEV    		   4	/* minor device for /dev/boot */
 #  define ZERO_DEV    		   5	/* minor device for /dev/zero */
-#  define IMGRD_DEV   		   6	/* minor device for /dev/imgrd */
-#  define RAM_DEV_FIRST		   7	/* first minor device for /dev/ram* */
+#  define MY_DISK_DEV  		   7    /* minor device for /dev/mydisk */
+#  define RAM_DEV_FIRST		   8	/* first minor device for /dev/ram* */
 
 #define CTRLR(n) ((n)==0 ? 3 : (8 + 2*((n)-1)))	/* magic formula */
 
