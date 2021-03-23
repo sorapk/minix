@@ -15,10 +15,11 @@ MINIX 3 File Changes:
 
 Compiling Commands Within MINIX 3.3.0:
 1. cd /usr
-2. git clone git://github.com/sorapk/minix.git src
-3. cd /usr/src
-4. make build > build.log
-5. reboot
+2. rm -r /src
+3. git clone git://github.com/sorapk/minix.git src
+4. cd /usr/src
+5. make build > build.log
+6. reboot
 
 Mydisk Testing Commands:
 1. mkdir /mnt/mydisk
