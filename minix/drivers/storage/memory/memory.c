@@ -307,7 +307,9 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
 {
 /* Read from one of the driver's character devices. */
   ssize_t r;
-
+  char hexArr[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
+  char c = hexArr[position % (sizeof(hexArr)/sizeof(hexArr[0])) ];
+  
   /* Check if the minor device number is ok. */
   if (minor < 0 || minor >= NR_DEVS || m_is_block(minor)) return ENXIO;
 
@@ -316,8 +318,6 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
     	r = 0;	/* always at EOF */
     	break;
     case HEX_DEV:
-      char hexArr[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
-      char c = hexArr[position % (sizeof(hexArr)/sizeof(hexArr[0])) ];
       if ((r = sys_safememset(endpt, grant, 0, c, size)) == OK)
         r = size;
       break;
