@@ -363,7 +363,7 @@ do
 			minor=`expr ${minor} + 4`
 		done
 		;;
-	ram|mem|kmem|null|boot|zero|imgrd)
+	ram|mem|kmem|null|boot|zero|imgrd|mydisk)
 		# Memory devices.
 		makedev ram   b 1 0 ${uname} kmem ${permissions}
 		makedev mem   c 1 1 ${uname} kmem 640
@@ -372,6 +372,7 @@ do
 		makedev boot  b 1 4 ${uname} kmem ${permissions}
 		makedev zero  c 1 5 ${uname} kmem 644
 		makedev imgrd b 1 6 ${uname} kmem ${permissions}
+		makedev mydisk b 1 7 ${uname} kmem ${permissions}
 		
 		for n in 0 1 2 3 4 5
 		do
