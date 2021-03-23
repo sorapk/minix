@@ -30,4 +30,4 @@ Mydisk Testing Commands:
 6. seq -s '' 500000 > data
 7. vi data
 8. df
-9. ls -l
+9. ls -l /dev/mydisk
