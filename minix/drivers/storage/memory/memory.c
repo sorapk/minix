@@ -322,7 +322,7 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
     case HEX_DEV:
       for (int i = 0; i < size; i++) {
         c = hexArr[(i + hexOffset) % hexArrSize];
-        if ((r = sys_safememset(endpt, grant, i, c, size)) == OK)
+        if ((r = sys_safememset(endpt, grant, i, c, 1)) == OK)
           r = size;
       }
       r = size;
