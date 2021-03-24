@@ -307,7 +307,7 @@ static ssize_t m_char_read(devminor_t minor, u64_t position, endpoint_t endpt,
 {
 /* Read from one of the driver's character devices. */
   ssize_t r;
-  char hexArr[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
+  char hexArr[] = {'X','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}; 
   char c = hexArr[position % (sizeof(hexArr)/sizeof(hexArr[0])) ];
   
   /* Check if the minor device number is ok. */
