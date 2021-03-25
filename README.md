@@ -3,10 +3,15 @@ Create a ramdisk device called mydisk.
 OS: minix-R3.3.0
 
 Description:
-- During boot, "dev/mydisk" device with the size of (4 * 1024 * 1024) bytes is created.
+- During boot 2 devices are created:
+	- block device: "dev/mydisk" device with the size of (4 * 1024 * 1024) bytes is created.
+	- character device: "dev/hex"
 - Supports:
-	- Mounting of the device
-	- Writing to / Reading from the device 
+	- "dev/mydisk":
+		- Mounting of the device
+		- Writing to / Reading from the device 
+	- "dev/hex":
+		- Reading from the device as hex characters
 
 MINIX 3 File Changes:
 - minix/drivers/storage/memory/memory.c 
@@ -21,7 +26,7 @@ Compiling Commands Within MINIX 3.3.0:
 5. make build > build.log
 6. reboot
 
-Mydisk Testing Commands:
+dev/mydisk testing commands:
 1. mkdir /mnt/mydisk
 2. chmod 755 /mnt/mydisk
 3. mkfs.mfs /dev/mydisk
